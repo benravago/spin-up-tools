@@ -1,4 +1,4 @@
-BigDOTS
+Spin-up tools
 =======
 
-To be defined
+Small tools to help get your spin's up and running.
