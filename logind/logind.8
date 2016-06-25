@@ -1,0 +1,172 @@
+.TH LOGIND 8 "May 2007"
+.
+.SH NAME
+.
+logind \- login daemon for virtual console terminals
+.
+.SH SYNOPSIS
+.
+.B logind
+.I tty...
+.
+.SH DESCRIPTION
+.
+.B logind
+is a daemon that starts login sessions on virtual console terminals,
+on demand.  It opens the virtual console terminals specified by the
+.I tty...
+arguments, displays a message on each of them, requesting user action,
+and waits.  On user action,
+.B logind
+executes
+.BR login (1)
+in a new process with the terminal the user is typing in as the
+controlling terminal.
+.PP
+.BR login (1)
+then displays the contents of an
+.BR issue (5)
+file, usually
+.IR /etc/issue ,
+prompts for a username and password to login with the system and
+finally, if the login succeeds, executes the user's login shell.
+.PP
+When the user logs out,
+.B logind
+restarts the corresponding virtual console terminal.
+.PP
+Here is how this all may look like:
+.PP
+.RS
+Press ENTER to start this console.
+.PP
+Login on tty5 at 14:37 (3 users online).
+.br
+host login: user
+.br
+Password:
+.PP
+user@host $ logout
+.PP
+Press ENTER to start this console.
+.RE
+.PP
+.
+.SH HISTORY
+.
+The traditional way to enable logins on virtual console terminals is
+to start a bunch of
+.BR getty (8)
+programs, one for each virtual console terminal, from
+.BR init (8).
+As most users rarely login on virtual console terminals nowadays, prefering
+graphical logins instead, it seems wastefull to have all those
+.BR getty (8)
+processes doing nothing but wasting memory.
+Alternatively,
+.B logind
+manages logins on any number of virtual console terminals from a single,
+light, process.
+.
+.SH INVOCATION
+.
+.B logind
+does not use stdin, stdout or stderr; you may as well close them
+at invocation time, e.g.:
+.PP
+.RS
+logind tty... <&- >&- 2>&-
+.RE
+.PP
+When running
+.B logind
+in the background, remember to disassociate it from the current controlling
+terminal by making it the process group leader of a new session, e.g.:
+.PP
+.RS
+setsid logind tty... <&- >&- 2>&- &
+.RE
+.PP
+You should also start it with an empty environment, e.g.:
+.PP
+.RS
+setsid env -i logind tty... <&- >&- 2>&- &
+.RE
+.PP
+If your
+.BR login (1)
+program does not set the environmental variable
+.B TERM
+as specified in
+.IR /etc/ttytype ,
+you can set it explicitly for all virtual console terminals, e.g.:
+.PP
+.RS
+setsid env -i TERM=... logind tty... <&- >&- 2>&- &
+.RE
+.PP
+To start
+.B logind
+from
+.BR init (8),
+add something like this to
+.IR /etc/inittab :
+.PP
+.RS
+lo:2345:respawn:env -i TERM=... logind tty... <&- >&- 2>&-
+.RE
+.
+.SH DIAGNOSTICS
+.
+If
+.B logind
+can not open one of the virtual console terminals specified in the
+.I tty...
+arguments, most likely because that
+.I tty
+device node does not exist, no greeting message will be displayed on
+that terminal, obviously, and
+.B logind
+will simply go on, ignoring the offending terminal.
+.PP
+If, on user action,
+.B logind
+can not execute
+.BR login (1),
+in all likelihood because the compiled-in
+.B LOGIN
+path does not match your system's
+.BR login (1)
+path,
+.B logind
+restarts the terminal and redisplays the greeting message.
+.PP
+In any case,
+.B logind
+does not ouput error messages.
+.
+.SH SEE ALSO
+.
+.BR login (1)
+.
+.SH SOURCE
+.
+http://anbadeol.googlepages.com/logind.html
+.
+.SH AUTHOR
+.
+Andre Oliveira
+.
+.SH COPYRIGHT
+.
+Copyright 2007 Andre Oliveira
+.PP
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+.PP
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.

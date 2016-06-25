@@ -1,0 +1,16 @@
+#!/bin/sh
+
+cmdline="logind /dev/tty8 /dev/tty9 /dev/tty10"
+
+case $1 in
+start)
+	cd /
+	setsid env -i TERM=vt100 $cmdline <&- >&- 2>&- &
+	;;
+stop)
+	pkill -fx "$cmdline"
+	;;
+*)
+	echo "Usage: $0 start|stop"
+	exit 1
+esac

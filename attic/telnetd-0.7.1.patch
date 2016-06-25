@@ -1,0 +1,25 @@
+diff -aur toybox-0.7.1/telnet.c telnetd/telnet.c
+--- toybox-0.7.1/telnet.c	2016-06-25 17:32:57.277066416 -0400
++++ telnetd/telnet.c	2016-06-23 14:07:09.766864021 -0400
+@@ -230,7 +230,7 @@
+ static int read_server(int len)
+ {
+   int i = 0;
+-  char curr;
++  unsigned char curr;
+   TT.pbuff = 0;
+ 
+   do {
+diff -aur toybox-0.7.1/telnetd.c telnetd/telnetd.c
+--- toybox-0.7.1/telnetd.c	2016-06-25 17:32:57.277066416 -0400
++++ telnetd/telnetd.c	2016-06-23 19:40:27.574490887 -0400
+@@ -121,7 +121,8 @@
+     if (utp_ptr->ut_pid == pid && utp_ptr->ut_type >= INIT_PROCESS) break;
+   }             
+   if (!utp_ptr) entry.ut_type = DEAD_PROCESS;
+-  time(&entry.ut_time);  
++  long int timer = entry.ut_time;
++  time(&timer);  
+   setutent();   
+   pututline(&entry);     
+ }

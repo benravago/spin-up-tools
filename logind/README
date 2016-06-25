@@ -1,0 +1,45 @@
+logind is a daemon that starts login sessions on virtual console terminals,
+on demand.  It is a good replacement for all those getty processes started
+from init that, most of the time, are only taking up memory.
+When compiled statically with dietlibc, the logind binary size is only
+about 2k and uses considerably less memory than a getty.
+
+$ size getty logind
+ text data   bss   dec  hex filename
+10388  788 10368 21544 5428 getty
+ 1602    8   124  1734  6c6 logind
+
+$ ls -l getty logind
+-r-x------ 1 root root 14796 2007-02-21 17:48 getty
+-r-x------ 1 root root  2148 2007-05-13 12:24 logind
+
+$ ps aux
+USER  PID %CPU %MEM  VSZ RSS TTY  STAT START TIME COMMAND
+root 2475  0.0  0.0 1572 236 tty1 Ss+  09:12 0:00 getty 38400 tty1
+root 2476  0.0  0.0 1572 236 tty2 Ss+  09:12 0:00 getty 38400 tty2
+root 2477  0.0  0.0 1576 236 tty3 Ss+  09:12 0:00 getty 38400 tty3
+root 2478  0.0  0.0 1572 236 tty4 Ss+  09:12 0:00 getty 38400 tty4
+root 2479  0.0  0.0 1572 236 tty5 Ss+  09:12 0:00 getty 38400 tty5
+root 2480  0.0  0.0 1572 236 tty6 Ss+  09:12 0:00 getty 38400 tty6
+root 5646  0.0  0.0  100  20 ?    Ss   12:38 0:00 logind /dev/tty[123456]
+
+Contents:
+ logind.c	- source code
+ logind.8	- manual page
+ init.d/logind	- script to start|stop logind
+ Makefile	- makefile
+ README		- this file
+ COPYING	- GNU General Public License
+
+Install:
+0. read the logind.8 manual page
+1. browse logind.c (check if the LOGIN path is correct!)
+2. edit Makefile to taste
+3. make
+4. copy the resulting logind binary and logind.8 to appropriate locations
+
+logind is being developed and tested on GNU/Linux only, because that is
+all I have access to, but I believe it will run on all other Unix systems.
+
+http://anbadeol.googlepages.com/logind.html
+Andre Oliveira <anbadeol@gmail.com>
