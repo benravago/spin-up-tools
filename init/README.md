@@ -9,7 +9,6 @@ Local customizations (attic/sinit-1.0.patch):
 To build and install:
 
 ```
-$ cd ./init
 $ make
 $ mv ./sinit ${rootfs}/sbin/init
 ```
