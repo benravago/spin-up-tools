@@ -8,8 +8,10 @@ Local customizations (attic/sinit-1.0.patch):
 
 To build and install:
 
-> $ cd ./init
-> $ make
-> $ mv ./sinit ${rootfs}/sbin/
+```
+$ cd ./init
+$ make
+$ mv ./sinit ${rootfs}/sbin/
+```
  
 where ${rootfs} is the target rootfs directory 
