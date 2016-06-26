@@ -11,7 +11,7 @@ To build and install:
 ```
 $ cd ./init
 $ make
-$ mv ./sinit ${rootfs}/sbin/
+$ mv ./sinit ${rootfs}/sbin/init
 ```
  
-where ${rootfs} is the target rootfs directory 
+where ${rootfs} is the target container or vm rootfs directory 
